@@ -1,0 +1,8 @@
+{
+  "name": "clearance-ledger",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Phone web app: check clearance finds against fees and tax, log a haul, find bundles.",
+  "scripts": { "test": "node --test test/*.test.js" }
+}

@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Clearance Ledger</title>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self'; connect-src 'self' https: http:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="description" content="Check clearance finds against fees and tax, log your haul, and see which items sell better together.">
+<meta name="theme-color" content="#E9EDF2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0C131E" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Ledger">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <h1>Clearance <span class="tagword">Ledger</span></h1>
+    <button class="link" id="link" type="button" aria-live="polite"></button>
+  </header>
+
+  <main id="views">
+    <section id="v-check" class="view" role="tabpanel" aria-labelledby="tab-check"></section>
+    <section id="v-haul" class="view" role="tabpanel" aria-labelledby="tab-haul" hidden></section>
+    <section id="v-pairs" class="view" role="tabpanel" aria-labelledby="tab-pairs" hidden></section>
+    <section id="v-setup" class="view" role="tabpanel" aria-labelledby="tab-setup" hidden></section>
+  </main>
+
+  <nav class="tabbar" role="tablist" aria-label="Sections">
+    <button class="tab" role="tab" id="tab-check" data-view="check" aria-selected="true" aria-controls="v-check">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12V4h8l10 10-8 8L3 12Z"/><circle cx="7.5" cy="8.5" r="1.4"/></svg>
+      <span>Check</span>
+    </button>
+    <button class="tab" role="tab" id="tab-haul" data-view="haul" aria-selected="false" aria-controls="v-haul" tabindex="-1">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8l9-5 9 5v9l-9 5-9-5V8Z"/><path d="M3 8l9 5 9-5M12 13v9"/></svg>
+      <span>Haul <b class="chip" id="chip-haul">0</b></span>
+    </button>
+    <button class="tab" role="tab" id="tab-pairs" data-view="pairs" aria-selected="false" aria-controls="v-pairs" tabindex="-1">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="10" height="10" rx="2"/><rect x="11" y="11" width="10" height="10" rx="2"/></svg>
+      <span>Pairs <b class="chip" id="chip-pairs">0</b></span>
+    </button>
+    <button class="tab" role="tab" id="tab-setup" data-view="setup" aria-selected="false" aria-controls="v-setup" tabindex="-1">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg>
+      <span>Setup</span>
+    </button>
+  </nav>
+</div>
+
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+<div id="scan-layer" class="scan" hidden></div>
+
+<noscript><p style="padding:24px;font-family:sans-serif">Clearance Ledger needs JavaScript.</p></noscript>
+<script src="vendor/zxing.min.js"></script>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
