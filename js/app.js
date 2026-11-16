@@ -44,7 +44,7 @@ const store = createStore({
 });
 const ollama = createOllama({ fetch: (...a) => window.fetch(...a), getSettings: () => store.state.settings });
 const camera = createCamera({ zxing: window.ZXing, mediaDevices: navigator.mediaDevices, doc: document });
-const market = createMarket({ fetch: (...a) => window.fetch(...a) });
+const market = createMarket({ fetch: (...a) => window.fetch(...a), getSettings: () => store.state.settings });
 const link = createLink({ ollama, store });
 const ctx = { store, ollama, camera, market, link, toast };
 

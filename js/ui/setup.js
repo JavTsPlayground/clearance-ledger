@@ -5,7 +5,7 @@ import { exportText, parseImport } from '../core/state.js';
 import { h, replace, labelled } from './dom.js';
 import { LINK_LABEL } from './link.js';
 
-const VERSION = '1.1.0';
+const VERSION = '1.2.0';
 
 async function copyText(text) {
   try { await navigator.clipboard.writeText(text); return true; } catch { /* fall back */ }
@@ -25,6 +25,9 @@ export function mountSetup(root, { store, link, toast }) {
   const model = h('input', { id: 's-model', type: 'text', class: 'mono', autocapitalize: 'off', autocorrect: 'off', spellcheck: 'false', list: 's-models' });
   const modelList = h('datalist', { id: 's-models' });
   const linkLine = h('p', { class: 'status', id: 'link-status', role: 'status' });
+  const relay = h('input', { id: 's-relay', type: 'url', class: 'mono', inputmode: 'url', autocapitalize: 'off', autocorrect: 'off', spellcheck: 'false', placeholder: 'https://ledger-relay.yourname.workers.dev' });
+  const relayBtn = h('button', { class: 'btn ghost small', type: 'button', id: 'btn-relay' }, 'Save relay');
+  relayBtn.addEventListener('click', () => { store.setSettings({ lookupUrl: relay.value }); relay.value = store.state.settings.lookupUrl; toast(relay.value ? 'Relay saved.' : 'Relay cleared. Using the free service directly.'); });
   const testBtn = h('button', { class: 'btn', type: 'button', id: 'btn-test' }, 'Save and test');
 
   async function saveAndTest() {
@@ -60,6 +63,12 @@ export function mountSetup(root, { store, link, toast }) {
       h('p', { class: 'hint' }, `3. Share Ollama over Tailscale, in PowerShell run as Administrator:`),
       h('pre', { class: 'cmd' }, `tailscale serve --bg --https=${OLLAMA_HTTPS_PORT} http://127.0.0.1:11434`),
       copyBtn(`tailscale serve --bg --https=${OLLAMA_HTTPS_PORT} http://127.0.0.1:11434`, 'Copy command')));
+
+  const relayCard = h('details', { class: 'card', id: 'relay-card' },
+    h('summary', null, 'Price lookup relay (optional)'),
+    h('p', { class: 'hint' }, 'Only needed if scans say they could not reach the price lookup. Paste the address of your relay here. Leave empty to call the free service directly.'),
+    h('div', { class: 'fields' }, labelled('s-relay', 'Relay address', relay, true)),
+    h('div', { class: 'actions' }, relayBtn));
 
   /* ---------- rules and fees ---------- */
   const inputs = {};
@@ -147,7 +156,7 @@ export function mountSetup(root, { store, link, toast }) {
   function syncInputs() {
     const { rules, settings } = store.state;
     const set = (el, v) => { if (document.activeElement !== el) el.value = String(v); };
-    set(url, settings.ollamaUrl); set(model, settings.model);
+    set(url, settings.ollamaUrl); set(model, settings.model); set(relay, settings.lookupUrl || '');
     set(roi, rules.targetRoi); set(minp, rules.minProfit); set(tax, rules.tax);
     for (const p of PLATFORMS) {
       set(feeIn[p].pct, rules.fees[p].pct); set(feeIn[p].fix, rules.fees[p].fix);
@@ -155,7 +164,7 @@ export function mountSetup(root, { store, link, toast }) {
     }
   }
 
-  replace(root, jinxCard, rulesCard, dataCard, aboutCard);
+  replace(root, jinxCard, relayCard, rulesCard, dataCard, aboutCard);
   store.subscribe(syncInputs);
   link.subscribe(renderLink);
   syncInputs();

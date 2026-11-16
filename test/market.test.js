@@ -71,3 +71,10 @@ test('market.lookup: not found, rate limit, server error, offline, cancel, timeo
   c2.abort();
   await assert.rejects(() => p, (e) => e.code === 'cancelled');
 });
+
+test('market.lookup: uses the relay address when one is saved', async () => {
+  let url = '';
+  const market = createMarket({ fetch: async (u) => { url = u; return res(reply); }, getSettings: () => ({ lookupUrl: 'https://relay.example.workers.dev' }) });
+  await market.lookup('4006381333931');
+  assert.equal(url, 'https://relay.example.workers.dev?upc=4006381333931');
+});

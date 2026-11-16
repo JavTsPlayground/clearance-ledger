@@ -1,7 +1,7 @@
 // Offline shell. Everything the app needs is cached on first load; nothing else is cached.
 // Calls to Jinx (Ollama) and every other site go straight to the network, never through the cache.
 // Bump VERSION whenever any file below changes, so phones fetch the new copy.
-const VERSION = '1.1.0';
+const VERSION = '1.2.0';
 const CACHE = 'clearance-ledger-' + VERSION;
 
 const ASSETS = [

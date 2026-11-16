@@ -131,3 +131,10 @@ test('hasModel: exact name, or a bare name that means :latest', () => {
   assert.equal(hasModel([], 'x'), false);
   assert.equal(hasModel(['x:1'], ''), false);
 });
+
+import { sanitizeSettings as _ss } from '../js/core/settings.js';
+test('settings: lookupUrl is cleaned, kept when saving other settings, and unsafe schemes are dropped', () => {
+  assert.equal(_ss({ lookupUrl: 'relay.example.workers.dev/' }).lookupUrl, 'https://relay.example.workers.dev');
+  assert.equal(_ss({ lookupUrl: 'javascript:alert(1)' }).lookupUrl, '');
+  assert.equal(_ss({}).lookupUrl, '');
+});

@@ -48,7 +48,7 @@ export function createStore({ storage, loc, onSaveError = () => {} }) {
       return gone;
     },
     setRules(rules) { commit({ ...state, rules: mergeRules(rules) }); },
-    setSettings(s) { commit({ ...state, settings: sanitizeSettings(s, loc) }); },
+    setSettings(s) { commit({ ...state, settings: sanitizeSettings({ ...state.settings, ...s }, loc) }); },
     replaceAll(next) { commit(sanitizeState(next, loc)); },
     /** Wipes everything back to first-run. Returns the previous state for undo. */
     resetAll() {

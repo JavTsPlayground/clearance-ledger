@@ -7,6 +7,7 @@ export const RECOMMENDED_MODEL = 'qwen2.5vl:7b';
 export const DEFAULT_SETTINGS = Object.freeze({
   ollamaUrl: '',
   model: RECOMMENDED_MODEL,
+  lookupUrl: '', // optional relay for the price lookup; empty means call the free service directly
 });
 
 const VISION_NAME = /(vl|vision|llava|gemma3|minicpm-v|moondream|granite3\.2-vision)/i;
@@ -39,7 +40,7 @@ export function sanitizeSettings(raw, loc) {
   const d = raw && typeof raw === 'object' ? raw : {};
   const url = normalizeUrl(d.ollamaUrl) || defaultOllamaUrl(loc);
   const model = String(d.model || '').trim().slice(0, 80);
-  return { ollamaUrl: url, model: model || RECOMMENDED_MODEL };
+  return { ollamaUrl: url, model: model || RECOMMENDED_MODEL, lookupUrl: normalizeUrl(d.lookupUrl) };
 }
 
 /** Picks the saved model if installed, else the first installed model that looks like a vision model. */

@@ -9,7 +9,7 @@ export class MarketError extends Error {
   constructor(code, message) { super(message); this.name = 'MarketError'; this.code = code; }
 }
 
-export function createMarket({ fetch: doFetch }) {
+export function createMarket({ fetch: doFetch, getSettings = () => ({}) }) {
   const cache = new Map();
 
   async function lookup(rawCode, signal) {
@@ -26,7 +26,8 @@ export function createMarket({ fetch: doFetch }) {
     }
     const timer = setTimeout(() => { why = 'timeout'; ctl.abort(); }, TIMEOUT_MS);
     try {
-      const res = await doFetch(`${LOOKUP_URL}?upc=${encodeURIComponent(code)}`, { signal: ctl.signal });
+      const relay = String((getSettings() || {}).lookupUrl || '');
+      const res = await doFetch(`${relay || LOOKUP_URL}?upc=${encodeURIComponent(code)}`, { signal: ctl.signal });
       if (res.status === 404) { cache.set(code, null); return null; }
       if (res.status === 429) throw new MarketError('limit', 'The free lookup is used up for now (about 100 a day). Try again later or type the price.');
       if (!res.ok) throw new MarketError('server', 'The price lookup had a problem. Type the price for now.');
