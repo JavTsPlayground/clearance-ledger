@@ -19,5 +19,6 @@ export function lookupLinks(term) {
   return {
     amazon: `https://www.amazon.com/s?k=${q}`,
     ebaySold: `https://www.ebay.com/sch/i.html?_nkw=${q}&LH_Sold=1&LH_Complete=1`,
+    web: `https://www.google.com/search?q=${q}`,
   };
 }

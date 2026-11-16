@@ -78,3 +78,30 @@ test('market.lookup: uses the relay address when one is saved', async () => {
   await market.lookup('4006381333931');
   assert.equal(url, 'https://relay.example.workers.dev?upc=4006381333931');
 });
+
+test('market.lookup: when the price service is blocked, a name still comes from the Open Facts databases', async () => {
+  const code = '4006381333931';
+  const calls = [];
+  const market = createMarket({ fetch: async (u) => {
+    calls.push(u);
+    if (u.startsWith('https://api.upcitemdb.com')) throw new TypeError('Failed to fetch');
+    if (u.startsWith('https://world.openbeautyfacts.org')) return res({ status: 1, product: { product_name: 'Grapefruit Body Wash', brands: 'Acme, Other', categories: 'Body, Bath' } });
+    return res({ status: 0 });
+  } });
+  const m = await market.lookup(code);
+  assert.equal(m.name, 'Acme Grapefruit Body Wash');
+  assert.equal(m.cat, 'beauty');
+  assert.equal(m.estimate, 0);
+  assert.ok(calls.some((u) => u.includes('openfoodfacts')) && calls.some((u) => u.includes('openpetfoodfacts')));
+});
+
+test('market.lookup: price service knows the price, a name database fills a missing name; rate limit still falls back to names', async () => {
+  const code = '4006381333931';
+  const noName = { items: [{ title: '', offers: [{ merchant: 'Amazon', price: 10, condition: 'New' }] }] };
+  const m1 = createMarket({ fetch: async (u) => u.startsWith('https://api.upcitemdb.com') ? res(noName) : res({ status: 1, product: { product_name: 'Candle 8oz', brands: 'X' } }) });
+  // an item with offers but no title is not an item for the parser, so it falls to the name database alone
+  const a = await m1.lookup(code);
+  assert.equal(a.name, 'X Candle 8oz');
+  const m2 = createMarket({ fetch: async (u) => u.startsWith('https://api.upcitemdb.com') ? res({}, 429) : res({ status: 1, product: { product_name: 'Candle 8oz' } }) });
+  assert.equal((await m2.lookup(code)).name, 'Candle 8oz');
+});

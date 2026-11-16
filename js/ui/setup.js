@@ -5,7 +5,7 @@ import { exportText, parseImport } from '../core/state.js';
 import { h, replace, labelled } from './dom.js';
 import { LINK_LABEL } from './link.js';
 
-const VERSION = '1.2.0';
+const VERSION = '1.3.0';
 
 async function copyText(text) {
   try { await navigator.clipboard.writeText(text); return true; } catch { /* fall back */ }

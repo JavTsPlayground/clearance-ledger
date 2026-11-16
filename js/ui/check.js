@@ -87,7 +87,8 @@ export function mountCheck(root, { store, ollama, camera, market, link, toast, g
       h('div', { class: 'imeta' }, meta.join(' · ')),
       h('div', { class: 'linkrow' },
         h('a', { class: 'btn small', href: links.amazon, target: '_blank', rel: 'noopener' }, 'Amazon price'),
-        h('a', { class: 'btn small ghost', href: links.ebaySold, target: '_blank', rel: 'noopener' }, 'eBay sold')),
+        h('a', { class: 'btn small ghost', href: links.ebaySold, target: '_blank', rel: 'noopener' }, 'eBay sold'),
+        h('a', { class: 'btn small ghost', href: links.web, target: '_blank', rel: 'noopener' }, 'Web search')),
       priceBox(),
       h('p', { class: 'hint' }, found.market ? 'Online listing prices, not sold prices. Tap eBay sold to confirm before you buy a lot of them.' : 'Open both links, note the typical sold price, then type it in as the expected sell price.'));
   }

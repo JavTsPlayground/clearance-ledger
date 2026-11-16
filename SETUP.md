@@ -19,3 +19,7 @@ Barcode scan, the maths and your haul work with no setup. Photo ID needs Jinx.
 
 ## Updating
 Change `VERSION` in `sw.js`, replace the files. The app shows "new version ready, Reload".
+
+## Better price lookups (optional, free)
+`relay/worker.js` is a Cloudflare Worker that asks UPCitemdb, the Open Facts databases and (with free keys) eBay in one call. Deploy it, paste its address under Setup > Price lookup relay. Without it the app tries UPCitemdb directly and falls back to Open Facts for names.
+eBay prices: create a free keyset at developer.ebay.com, then in the Worker's Settings > Variables and Secrets add `EBAY_APP_ID` and `EBAY_CERT_ID` as secrets.
